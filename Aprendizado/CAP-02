@@ -1,0 +1,82 @@
+Neste capítulo aprendemos a criar um projeto Maven.
+
+Para criar um projeto com Maven, siga os passo:
+
+1) No Package Explorer haverá a opção Create a Maven Project (essa opção pode ser acessada via File -> New -> Maven Project);
+
+2) Há opção para pular o Archtype, se não marcamos ela teremos que escolher um Archtype, que no caso define a estrutura do projeto, há
+diversos padões disponíveis: Java EE, Projeto para criar Plugin, Aplicação Java Web, entre outras! Ao marcar a opção para pular o
+Archtype vamos estar criado um projeto maven "pelado", só será criado a estrutura padrão, básica! Vamos escolher pular Archtype
+
+3) Teremos que nomear algumas coisas, por exemplo:
+
+	Group Id = É o identificador único da organização, da empresa. Segue o padrão de nome de pacotes java;
+	
+	Artifact Id = É o identificador único da aplicação;
+	
+	Version = Define a versão da aplicação, podemos mudar para 1.0.0;
+	
+	Package = Define o que vamos gerar ao buildar a aplicação, neste projeto vamos deixar JAR.
+	
+	Name = Podemos definir um nome para o projeto, é opcional, pois o Artifcat Id definirá o nome
+	
+	Description = Podemos descrever a nossa aplicação/projeto. É opcional!
+	
+	Sessão Parent Project: Servirá para definir se nossa aplicação depende de outra, ou seja, se é filho de outra aplicação para 
+funcionar. Se for podemos preencher os campos Group Id, Artifact Id e Version dessa aplicação Pai ou então clicar em Browse e
+selecionar o projeto.
+
+	Dpois de preencher tudo isso, podemos clicar em Finish!
+	
+4) Agora já temos o projeto com a seguinte estrutura:
+
+	Folder (pasta) src/main/java = local onde ficará nosso código Java (classe, interface...);
+	
+	Folder (pasta) src/main/resource = local onde ficará arquivos de configuração (persistence.xml, application.properties, etc).
+	Em um projeto SrpringBoot criariamos nesta pasta uma outra pasta para conter as páginas HTML (JSP)...
+	
+	Folder (pasta) src/test/java = local onde ficará nosso código Java referente a testes;
+	
+	Folder (pasta) src/test/resource = local onde ficará arquivos de configuração referente a testes;
+	
+	Arquivo pom.xml, é o arquivo que define o Maven, é nele que fazemos a cofiguração do Maven para este projeto. Nele vamos
+	definir as dependencias do projeto e o modo que vamos empacotar/buildar esse projeto!
+	
+Podemos trocar/configurar essa estrutura de pastas criadas! Mas NÃO é boa prática fazer isso!!!
+
+
+Como adicionar o Maven em um projeto que não é Maven? Basta clicar no com botão direito no projeto -> Convert to Maven Project. 
+Teremos que dar um Group Id, dar um Artificat ID (vem preenchido com o nome do projet), indicar a versão, indicar o tipo de 
+empacotamento e podemos (é opcional) dar um Name e Description. Depois de preencher tudo isso, basta clicar m FInish. O projeto 
+agora é do tipo Maven e tem o arquivo pom.xml.
+
+Só que ao converter um porjeto para Maven Project não ganhamos a estrutura padrão: 
+
+	src/main/java
+	src/main/resource
+	src/test/java
+	src/test/resource
+	
+Teremos que criar essa estrutura na mão! Para isso podemos clicar no projeto com botão direito -> Build Path -> Configure Build Path
+-> Na aba Source devemos remover as folders e clicar em Apply -> na mesma aba clicar agora em Add Folder -> selecionar src e clicar
+na opção Create new Folder e criar duas pastas, a src/main/java e repetir o passo para criar src/main/resources e dar ok -> agora 
+temos que criar as folders de teste, devemos selecionar agra test e clicar na opção Create new Folder e criar duas pastas a src/test/
+java e repetir o passo para criar src/test/resources e dar ok -> Temos que fazer um ajuste nas foldes de teste, basta abri-lás dentro
+da aba Source (Build Path) e clicar no item Contains test sources: no para mudar seu valor para yes. Depois na mesma aba devemos
+clicar no item Output folder, abrirá uma outra aba, devemos marcar Specific output folder e definir o caminho: target/test-classes. 
+Devemos fazer isso nas duas pastas de test. Agora nos diretorios de resources (para main e para test) devemos clicar no item 
+Exclude:none, abrirá uma nova aba e na sessão Exclusion patterns clicar em add e adicionar o valor: **
+
+Agora já temos a estrutura configurada, mas veja que "perdemos nossa classes", mas podemos recuperá-las na pasta src (pasta que não é
+da estrutura Maven), podemos arrastar o pacote java que esta dentro de src para dentro de src/main/java. Caso tenha arquivos de
+configuração dentro da pasta src podemos arrastar todos para src/main/resources. Veja que também temos a pasta test (fora da 
+estrutura Maven), podemos arrastar todo seus pacotes para src/test/java.
+
+A pasta WebContent (não é da estrutura maven) podemos renomear para webapp e arrastá-la para dentro da pasta src ( que também não é
+da estrutura maven).
+
+Dentro da pasta src (que não é da estrutura maven) podemos apagar a pasta lib, pois agora vamos usar o arquivo pom.xml.
+
+Feito isso podemos apagar as pastas test, build
+
+	

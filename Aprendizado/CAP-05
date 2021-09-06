@@ -1,0 +1,140 @@
+Neste capítulo falamos sobre outros recursos/utilidades do Mavenm, como Plugins, Módulos e Proxy.
+
+
+Você se lembra que para configurar a versão do Java (código e empacotamento/build) tivemos que adicionar a tag <plugin> lá no arquivo
+pom.xml ?! Ou seja, já trabalhamos com Plugin. 
+
+Um Plugin modifica/manipula o build da aplicação. Podemos adicionar diversos Plugins e cada um faz uma coisa. No site do Maven há uma
+lista de Plugins disponíveis. Um Plugin pode nos dar novos Goals/Tarefas, por exemplo o Plugin do Jetty, que já coloca na nossa
+aplicação um Servidor, logo não precisamos adicionar o WAR no servidor. Para executar o plugin do Jetty executaríamos o comando:
+
+	mvn jetty:run
+	
+Onde jetty é o nome do Plugin e run é o Goal/Tarefa. 
+
+
+Vamos testar o Plugin Jacoco (mostra um relátorio dos nosso testes, quantos passaram, quantas linhas são testadas, etc...)
+Para adicionar esse plugin dentro da tag <plugins> vamos criar outro bloco com a tag <plugin>, ficará assim:
+
+ 			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>0.7.7.201606060606</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			
+Tenha em mente que cada Plugin tem uma maneira de configurar, teremos que verificar a documentação sempre!
+
+Esse plugin roda com o comando:
+
+	mvn test
+	
+Ele roda assim, pois esse Plugin foi configurado para rodar na fase de test, veja a tag <phase>. Ao rodar esse Plugin na pasta target
+vai surgir um arquivo HTML que é o relatório dos testes.
+
+Resumidamente, Plugin visa adicionar novas funcionalidades ao Maven.
+
+
+
+Vamos falar agora do Proxy:
+
+Se a rede que estamos utilizando possui Proxy, teremos que configurar o Maven com o mesmo, caso contrário não será possível fazer
+download das dependencias. Isso Não tem relação nenhuma com projeto, logo NÃO vamos fazer isso no arquivo pom.xml
+Essa configuração será dentro da pasta .m2, nesta pasta teremos que criar o arquivo settings.xml. Veja o conteudo deste arquivo:
+
+
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+      
+      <proxies>
+        <proxy>
+          <id>myproxy</id>
+          <active>true</active>
+          <protocol>http</protocol>
+          <host>proxy.somewhere.com</host>
+          <port>8080</port>
+          <username>proxyuser</username>
+          <password>somepassword</password>
+        </proxy>
+      </proxies>
+      
+    </settings>
+    
+O id é um apelido que vamos dar ao proxy.
+
+Lembra quando configuramos um repositorio remoto diferente do padrão do Maven? Então, aquela configuração também pode ser feita neste
+arquivo settings.xml, mas daí isso seria para todos os projetos!
+
+
+
+Vamos falar agora sobre Módulos:
+
+As vezes temos aplicações grandes e complexas e surge a necessidade de dividir esse aplicação em módulos! O Java 9 trouxe esse
+recurso de Módulos, mas podemos usar o Maven para isso. Nesse contexto teremos uma aplicação que será o Pai de outras 
+aplicações/modulos.
+
+Veja o exemplo:
+
+	1) Aplicação Pai se chamará: clean-architecture, dentro de aplicação há o arquivo pom.xml e os 3 módulos filhos (pastas). 
+	Sua finalidadeé agrupar os módulos.
+	
+	Seu arquivo pom.xml tem tudo que os outros pom.xml possuem, mais algumas diferenças como: 
+	
+		A tag <packaging> tem o valor pom, ficando assim <packaging>pom</packaging>
+		
+		Existe a tag <modules></modules> e cada item dentro desta tag vem a tag <module></module> e o valor é os módulos
+		filhos. Neste exemplo ficou:
+		
+		<modules>
+			<module>rh-domain</module>
+			<module>rh-web</module>
+			<module>rh-persistencia</module>
+		</modules>
+	
+	
+	2) Neste exemplo teremos 3 aplicações filhas/módulos. Em cada filha há a estrutura do Maven normal, ou seja, pastas do tipo
+	src/main/java, src/main/resources, etc..
+	
+	
+	3) No arquivo pom.xml dos módulos não há tag <groupId>, em seu lugar temos a tag <parent> e nela que vou configurar. Veja
+	como ficará:
+	
+	<parent>
+		<groupId>br.com.caelum.fj91</groupId>
+		<artifactId>rh</artifactId>
+		<version>1.0</version>
+	</parent>
+	
+	Os valores adicionanos dentro do <parent> é referente a aplicação Pai, que no caso é clean-architecture.
+	
+	
+	4) Tenha em mente que toda dependencia adicionada no pai estará presente nos módulos e em cada módulo eu posso adicionar
+	dependencias específicas;
+	
+	
+	5) Um módulo pode depender de outro. Basta adicionar no arquivo pom.xml a tag <depencie>, veja o arquivo pom.xml de rh-web:
+	
+	<dependency>
+		<groupId>br.com.caelum.fj91</groupId>
+		<artifactId>rh-domain</artifactId>
+		<version>1.0</version>
+	</dependency>
+	
+	
+	6) Os módulos são programas Maven comuns, ja o pai basta escolher o tipo de projeto POM do Maven!
+	
+	
+	7) Para rodar o projeto, devemos rodar a aplicação do Projeto Pai, que através dele ele irá buildar os filhos também.

@@ -1,0 +1,62 @@
+Neste capítulo falamos sobre as dependencias (bibliotecas que adicionamos em nosso projeto).
+
+
+Para adicionar uma biblioteca devemos abrir o arquivo pom.xml e adicionar dentro da tag <project> a tAG:
+
+	<dependencies>
+	</dependencies>
+	
+Cada dependencia será declarada dentro de <dependencies>, e para cada dependencia usamos a tag <dependency>
+	
+O JUnit de nosso projeto está vinculado a IDE, vamos adicionar um diretamente no nosso projeto. Para isso vamos primeiro remover o da 
+IDE, para isso  devemos clicar com botão direito no projeto -> Build Path -> Configure Build Path -> Libraries -> Selecionar JUnit4 ->
+Remove.
+
+Para adicionar, vamos adicionar o trecho (tem que ser dentro da tagp <project>):
+
+	  <dependencies>
+	  	<dependency>
+	  		<groupId>junit</groupId>
+	  		<artifactId>junit</artifactId>
+	  		<version>4.12</version>
+	  		<scope>test</scope>
+	  	</dependency>
+	  </dependencies>
+	  
+Veja que essas tag é igual as informações que digitamos para criar um projeto Maven, a única diferente é <scope> que define quando
+vamos precisar da dependência. 
+
+Após salvar o arquivo pom.xml a biblioteca definida será baixada da internet. Veja na sessão Maven Dependencies que JUnit já está lá
+e veja também que hamcrest também apareceu, mas por qual motivo? É que JUnit depende de hamcrest, o Maven traz tudo certinho pra nós!
+
+
+Como você sabia o goupId, Artifcat e Version do JUnit? Temos que decorar? NÃO! Por padrão todas as bibliotecas vão ser baixadas do
+repositório oficial do Maven e esse repositório tem um site: https://mvnrepository.com/ neste podemos buscar a dependencia que 
+precisamos, escolher sua versão e copiar o trecho que a adiciona! Na sessão que mostra o código, temos que deixar marcado a opção(aba)
+Maven.
+
+Toda dependencia é baixada da internet (repositório remoto do Maven) e é salva no diretório do Maven (local, na nossa máquina). Se eu 
+usar a mesma biblioteca em outro projeto, a mesma não será mais baixada da internet, pois será usada a que está em nosso PC.
+
+E se precisarmos usar uma biblioteca que está em um repositório diferente, por exemplo está no repositorio da empresa, ou de outro 
+site, como podemos configurar? Basta usar adicionar o seguinte código no arquivo pom.xml:
+
+	  <repositories>
+	  	<repository>
+	  		<id>spring-repo</id>
+	  		<url>https://repo.spring.io/release</url>
+	  	</repository>
+	  </repositories>
+	  
+Tenha em mente que nesse código o importe é a tag <url> que define o endereço do repositório, a tag <id> é apenas um apelido.
+Na tag <url> se fosse algo em arquivo, poderiamos usar file://
+
+Tenha em mente que toda dependencia que adicionamos no arquivo pom.xml primeiro é buscado no repositorio local do maven ( que é a 
+pasta chamada m2), depois é procurado no repositório dentro da tag <repositories> (se tiver) e por fim no repositório padrão do 
+Maven.
+
+O repositório local do Maven (cache) fica dentro da pasta .m2 (é uma pasta oculta).
+
+Tenha em mente que ao fazer Download de uma dependencia pode haver um erro. O primero passo para corrigir é clicar botão direito no
+projeto -> Maven -> Update Project. Se o erro persistir, uma dica é entrar na pasta .m2 e apagar tudo! Após isso basta clicar botão 
+direito no projeto -> Maven -> Update Project e tudo será baixado novamente!

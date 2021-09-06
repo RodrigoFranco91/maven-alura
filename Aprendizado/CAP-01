@@ -1,0 +1,41 @@
+Neste capitulo falamos o que é Maven e como instalá-lo.
+
+
+Pense no seguinte cenário: temos uma aplicação Java pronta e agora precisamos buildar a aplicação, ou seja, gerar um WAR para poder
+fazer o deploy da aplicação.
+
+Como podemos gerar esse arquivo WAR? Uma maneira simples é gerar através da IDE, ou seja, é o que já fizemos no projeto de Servlet,
+basta exportar o projeto para o formato WAR, mas essa maneira não é uma boa prática e vamos falar o porquê.
+
+Gerar o WAR pela IDE não é prático, pois quase sempre temos que rodar testes antes de gerar o WAR, ou seja, desse modo temos que 
+lembrar de rodar as classes de testes na IDE (podemos esquecer). Outro ponto são as configurações do arquivo .properties que são
+configurações para banco de dados, endereço de API, etc, antes de gerar o WAR temos que mudar os valores desses arquivo para valores
+do ambiente de produção, outro ponto é que gerar WAR pela IDE muitas vezes exige que criemos diretorios, mover e/ou criar arquivos...
+Resumidamente gerar WAR pela IDE é trabalhoso e podemos esquecer de fazer alguma coisa e até por isso quem faz build pela IDE tem
+um documento (tutorial) para seguir o passo a passo!
+
+Devido essas dificuldades criaram a ferramente Apache Ant, esse automatiza o processo de build, ou seja, roda automaticamente os
+testes antes de gerar WAR, cria os repositórios e movia os arquivos necessários. 
+
+Mas ainda temos uma outra dificuldade ao fazer o Build que o Ant não resolve, que é gerenciar a versão das bibliotecas que nosso 
+projeto usa e tenha em mente que isso é trabalhoso, pois se hoje usamos uma biblioteca (arquivo JAR) na versao 1 e precisamos 
+atualizar a mesma para versão 2 certamente havera conflitos, pois uma outra biblioteca também vai precisar ser atualizada...
+
+Devido essa outra dificuldade foi criada a ferramenta IVY, ou seja, essa ferramente gerencia os arquivos JAR (nossas depencendias,
+são as bibliotecas que nosso projeto usa). Basta configurar o arquivo ivy.xml, nele declaramos quais bibliotecas queremos usar!
+
+Ou seja, temos duas ferramentas Apache Ant e IVY que ajuda o programador a fazer Deploy, mas hoje em dia o pessoal trocou essas duas
+pelo Apacha Maven, pois esta ferramenta tem as das funcionalidades: gerencia dependencias e automatiza o Build! Há concorrentes para
+o Maven, por exemplo: Gradle, SBT, ect...
+
+
+Como usar o Maven? Temos duas maneiras, a primeira é instalando a ferramenta no nosso PC, para facilitar podemos configurar a mesma
+nas variáveis de ambiente e fazer o uso desta ferramente via terminal de comandos. Os comandos vão ser mvn + alguma coisa, por 
+exemplo: mvn --version. Caso não façamos a configuração na variavel de ambiente do sistema, teremos que entrar na pasta bin do maven e
+rodar o arquivo mvn, por exemplo: ./mvn --version
+
+Dica: mvn --help exibirá os comandos e terá uma explicação!
+
+A segunda maneira é executar o Maven diretamente na IDE que estivermos usando para programar! Neste curso vamos usar o Eclipse! Nele
+podemos converter uma aplicação comum para um projeto Maven, podemos baixar e abrir um projeto Maven, entre outros recursos...
+Certamente há um Plugin Maven disponível para instalar na IDE que você utiliza!

@@ -1,0 +1,64 @@
+Neste capítulo falamos sobre fazer o Build através do Maven.
+
+
+Quando o assunto é Buildar (empacotar) a aplicação, normalmente fazemos através de comandos no terminal, embora também podemos fazer
+pela IDE. 
+
+
+Vamos começar pelo Terminal, devemos estar na pasta do projeto, no caso Loja. Os comandos que executaremos sempre começarão com mvn e 
+depois virá acopanhando de um Goal (tarefa que pode ser executada). Exemplo:
+
+	=> mvn compile = vai compilar o nosso projeto, ou seja, os arquivos .java vão gerar os arquivos .class. 
+	Ocorrerá um erro, pois vai falar que o Java encontra-se na versão 5, pois lá no arquivo pom.xml em nenhum lugar configuramos 
+	nosso Build.
+	Veja  trecho que devemos adicionar lá no arquivo pom.xml:
+	
+		<build>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>11</source>
+						<target>11</target>
+					</configuration>
+				</plugin>
+			</plugins>
+		</build>
+	
+	Veja que tivemos que colocar a tag <build> e definir dentro dela um plugin (vamos estudar mais a frente). Na tag
+	<configuration> definimos que estamos usando java 11 (source) e que vamos compilar para java 11 (target).	
+	
+	
+	=> mvn clean = limpa a pasta target, que é o local que é enviado os arquivos compilados, ou seja, limpa o "terreno";
+
+
+	=> mvn clean compile = podemos juntar dois goals, no caso vai limpar e depois compilar;
+
+
+	=> mvn test = vai rodar os testes automatizados que temos em nossos projetos. Tenha em mente que o comando test roda o compile,
+	pois só é possível testar se compilarmos!
+	
+	
+	=> mvn package = vai empacotar nossa aplicação, ou seja, vai gerar um JAR ou WAR. O arquivo empacotado ficará na pasta target
+	
+	
+	=> mvn install = vai empacotar a nossa aplicação e o arquivo empacotado ficara no repositório local do maven (pasta .m2);
+	
+	
+	=> mvn deploy = vai empacotar a nossa aplicação e o arquivo empacotado será enviado para um repositório remoto. Para esse 
+	comando funcionar, temos que configurar esse repositório remoto lá no arquivo pom.xml, na tag <repositories>
+	
+	
+Podemos personalizar o deploy, então lá no arquivo pom.xml podemos adicionar as seguintes tags:
+
+	<packaging>war</packaging> = Define o tipo de empacotamento, por padrão (sem a tag) é JAR. Essa tag fica dentro da tag
+	<project>, normalmente vem embaixo da tag <version> de nosso projeto.
+	
+	
+	<finalName>loja</finalName> = Define o nome do arquivo empacotado (JAR ou WAR). Essa tag tem que ficar dentro da tag
+	<buid>. Neste caso o arquivo terá o nome loja, ou seja, não terá mais a versão no nome que vinha por padrão.
+	
+	
+Como fazer tudo que fizemos diretamente na IDE? Basta clicar botão direito no projeto -> Run As -> Maven build (ou outra tarefa).
+Caso não apareça a tarefa desejado, basta selecionar a opção Maven Build ...., abrirá uma Aba e em Goals digite as tarefas, por
+exemplo: clean compile -> Run.
